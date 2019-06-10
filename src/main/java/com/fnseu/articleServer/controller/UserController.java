@@ -1,6 +1,6 @@
 package com.fnseu.articleServer.controller;
 
-import com.baomidou.mybatisplus.extension.api.R;
+
 import com.fnseu.articleServer.pojo.ArticleInfo;
 import com.fnseu.articleServer.pojo.ArticleReviewInfo;
 import com.fnseu.articleServer.pojo.Review;
@@ -8,7 +8,7 @@ import com.fnseu.articleServer.pojo.User;
 import com.fnseu.articleServer.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-//import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
@@ -49,7 +49,7 @@ public class UserController {
 
     //内容审核详情查询
     @GetMapping(value = "/review/article")
-    public Review selReviewById(@RequestParam BigInteger id){
+    public Review selReviewById(@RequestParam long id){
         return userService.selReviewById(id);
     }
 //    @GetMapping("/user/test")

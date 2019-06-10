@@ -17,7 +17,7 @@ public interface UserService {
     User selById(int id);
     List<User> selByName(String name);
 
-    Review selReviewById(BigInteger id);
+    Review selReviewById(long id);
 
     List<Review> listReview();
 

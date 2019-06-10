@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
     }
 
     //内容审核详情查询
-    public Review selReviewById(BigInteger id){
+    public Review selReviewById(long id){
         return userServiceMapper.selReviewById(id);
     }
 

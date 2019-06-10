@@ -4,11 +4,11 @@ import javax.xml.soap.Text;
 import java.math.BigInteger;
 
 public class ArticleInfo {
-    private BigInteger articleId;
+    private long articleId;
 
     private int status; //审核结果
     private String title;
-    private BigInteger author_id;
+    private long authorId;
     //private String version;
 //    private BigInteger author_id;
 //    private Text body;
@@ -19,14 +19,22 @@ public class ArticleInfo {
 //    private String source;
 //    private String category;
 //    private String subcategory;
-    public BigInteger getArticleId() {
+
+    public long getArticleId() {
         return articleId;
     }
 
-    public void setArticleId(BigInteger articleId) {
+    public void setArticleId(long articleId) {
         this.articleId = articleId;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public String getTitle() {
         return title;
@@ -36,19 +44,11 @@ public class ArticleInfo {
         this.title = title;
     }
 
-    public BigInteger getAuthor_id() {
-        return author_id;
+    public long getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthor_id(BigInteger author_id) {
-        this.author_id = author_id;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
+    public void setAuthorId(long authorId) {
+        this.authorId = authorId;
     }
 }

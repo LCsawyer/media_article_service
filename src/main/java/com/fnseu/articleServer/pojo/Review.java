@@ -4,65 +4,79 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 
 public class Review {
-    private BigInteger reviewId;
-    private long reviewer_id;
-    private BigInteger contentId;
-    private Integer content_type;
-    private Integer level;
-    private Integer result;
+    private long reviewId;
+    private long reviewerId;
+    private long contentId;
+    private int contentType;
+    private int level;
+    private int result;
     private Timestamp reviewTime;
     private String description;
 
-    public BigInteger getReviewId() {
+    @Override
+    public String toString() {
+        return "Review{" +
+                "reviewId=" + reviewId +
+                ", reviewerId=" + reviewerId +
+                ", contentId=" + contentId +
+                ", contentType=" + contentType +
+                ", level=" + level +
+                ", result=" + result +
+                ", reviewTime=" + reviewTime +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
+    public long getReviewId() {
         return reviewId;
     }
 
-    public void setReviewId(BigInteger reviewId) {
+    public void setReviewId(long reviewId) {
         this.reviewId = reviewId;
     }
 
-    public long getReviewer_id() {
-        return reviewer_id;
+    public long getReviewerId() {
+        return reviewerId;
     }
 
-    public void setReviewer_id(long reviewer_id) {
-        this.reviewer_id = reviewer_id;
+    public void setReviewerId(long reviewerId) {
+        this.reviewerId = reviewerId;
     }
 
-    public BigInteger getContentId() {
+    public long getContentId() {
         return contentId;
     }
 
-    public void setContentId(BigInteger contentId) {
+    public void setContentId(long contentId) {
         this.contentId = contentId;
     }
 
-    public Integer getContent_type() {
-        return content_type;
+    public int getContentType() {
+        return contentType;
     }
 
-    public void setContent_type(Integer content_type) {
-        this.content_type = content_type;
+    public void setContentType(int contentType) {
+        this.contentType = contentType;
     }
 
-    public Integer getLevel() {
+    public int getLevel() {
         return level;
     }
 
-    public void setLevel(Integer level) {
+    public void setLevel(int level) {
         this.level = level;
     }
 
-    public Integer getResult() {
+    public int getResult() {
         return result;
     }
 
-    public void setResult(Integer result) {
+    public void setResult(int result) {
         this.result = result;
     }
 
-    public String getReviewTime() {
-        return reviewTime.toString();
+    public Timestamp getReviewTime() {
+        return reviewTime;
     }
 
     public void setReviewTime(Timestamp reviewTime) {
@@ -71,20 +85,6 @@ public class Review {
 
     public String getDescription() {
         return description;
-    }
-
-    @Override
-    public String toString() {
-        return "Review{" +
-                "reviewId=" + reviewId +
-                ", reviewer_id=" + reviewer_id +
-                ", contentId=" + contentId +
-                ", content_type=" + content_type +
-                ", level=" + level +
-                ", result=" + result +
-                ", reviewTime=" + reviewTime +
-                ", description='" + description + '\'' +
-                '}';
     }
 
     public void setDescription(String description) {

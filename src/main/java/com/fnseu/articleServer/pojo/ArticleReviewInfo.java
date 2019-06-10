@@ -4,28 +4,25 @@ import java.math.BigInteger;
 
 public class ArticleReviewInfo {
 
-    private BigInteger reviewId;
-    private long reviewer_id;
+    private long reviewId;
+    private long reviewerId;
     private ArticleInfo articleInfo;
 
-    public BigInteger getReviewId() {
+    public long getReviewId() {
         return reviewId;
     }
 
-    public void setReviewId(BigInteger reviewId) {
+    public void setReviewId(long reviewId) {
         this.reviewId = reviewId;
     }
 
-    public long getReviewer_id() {
-        return reviewer_id;
+    public long getReviewerId() {
+        return reviewerId;
     }
 
-    public void setReviewer_id(long reviewer_id) {
-        this.reviewer_id = reviewer_id;
+    public void setReviewerId(long reviewerId) {
+        this.reviewerId = reviewerId;
     }
-
-
-
 
     public ArticleInfo getArticleInfo() {
         return articleInfo;
