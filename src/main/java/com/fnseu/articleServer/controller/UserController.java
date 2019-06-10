@@ -47,7 +47,7 @@ public class UserController {
         return userService.selectAuthFileById(id);
     }
 
-    @PostMapping(path = "/review/identity.json")
+    @PostMapping(path = "/review/identity")
     @ResponseBody
     public int insertAuth(@RequestBody Authentication authentication){
         return userService.insertAuth(authentication);
