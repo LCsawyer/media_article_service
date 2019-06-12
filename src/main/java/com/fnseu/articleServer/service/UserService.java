@@ -21,7 +21,7 @@ public interface UserService {
 
     List<Review> listReview();
 
-    List<ArticleReviewInfo> listArticleReview(int status);
+    List<ArticleReviewInfo> listArticleReview(int status, int capcity, int offset);
 
     String addReview(Review revData);
 }

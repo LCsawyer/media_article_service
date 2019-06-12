@@ -28,14 +28,14 @@ public interface UserServiceMapper {
 
 
     //查询列举审核表中内容审核项，并根据review.content_id：article.id一对一查询文章表
-    @Select("SELECT * FROM review WHERE content_type=#{content_type}")
+    @Select("SELECT * FROM review WHERE content_type=#{contType} limit #{offset},#{capcity}")
     @Results(value = {
             @Result(id= true, property = "reviewId",column ="id" ),
             @Result(property = "reviewerId",column ="reviewer_id" ),
             @Result(property = "articleInfo", column = "content_id",
                    one=@One(select = "com.fnseu.articleServer.mapper.UserServiceMapper.selectArticleById",fetchType= FetchType.EAGER))
     })
-    List<ArticleReviewInfo> listArticleReview(int content_type);
+    List<ArticleReviewInfo> listArticleReview(@Param("contType")int content_type,@Param("capcity") int capcity,@Param("offset")int offset);
 
     //根据id查询文章
     @Results({
@@ -44,7 +44,7 @@ public interface UserServiceMapper {
             @Result(property = "authorId", column = "author_id"),
             @Result(property = "title", column = "title")
     })
-    @Select("SELECT * FROM article  WHERE id = #{content_id};")
+    @Select("SELECT * FROM article  WHERE id = #{content_id} ;")
     ArticleInfo selectArticleById(int content_id);
 
     //根据审核结果查询审核表中的内容审核条目
@@ -55,8 +55,9 @@ public interface UserServiceMapper {
                     "com.fnseu.articleServer.mapper.UserServiceMapper.selectArticleById",fetchType= FetchType.EAGER
             ))
     })
-    @Select("SELECT * FROM review WHERE content_type=#{contType} and result=#{result}" )
-    List<ArticleReviewInfo> selReviewByResult(@Param("contType") int content_type, @Param("result")int status);
+    @Select("SELECT * FROM review WHERE content_type=#{contType} and result=#{result} limit #{offset},#{capcity}" )
+    List<ArticleReviewInfo> selReviewByResult(@Param("contType") int content_type, @Param("result")int status,
+                                              @Param("capcity" ) int capcity, @Param("offset")int offset);
 
 
     @Results(value = {

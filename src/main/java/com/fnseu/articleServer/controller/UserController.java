@@ -42,9 +42,9 @@ public class UserController {
     //内容审核列表查询
     @GetMapping(value = "/review/article/collection")
     public List<ArticleReviewInfo> listArticleReview(@RequestParam(defaultValue = "-1") int status,
-                                                            @RequestParam(defaultValue = "10") int size,
+                                                            @RequestParam(defaultValue = "10") int capcity,
                                                             @RequestParam(defaultValue = "1")int currentPage){
-            return userService.listArticleReview(status);
+            return userService.listArticleReview(status, capcity, (currentPage-1)*capcity);
     }
 
     //内容审核详情查询

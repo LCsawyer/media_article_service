@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     }
 
     //内容审核列表查询
-    public List<ArticleReviewInfo> listArticleReview(int status){
+    public List<ArticleReviewInfo> listArticleReview(int status, int capcity, int offset){
         System.out.println("status:" + status);
 //        try {
 //            if(status == -1) {
@@ -55,11 +55,12 @@ public class UserServiceImpl implements UserService {
 //        }catch (Exception e){
 //            System.out.println("内容审核列表查询： 无效的status状态码");
 //        }
+
         if(status == -1) {
-            return userServiceMapper.listArticleReview(1);
+            return userServiceMapper.listArticleReview(1, capcity, offset);
         }
         else if(status >= 0) {
-            return userServiceMapper.selReviewByResult(1, status);
+            return userServiceMapper.selReviewByResult(1, status, capcity, offset);
         }
         else{
             System.out.println("内容审核列表查询： 无效的status状态码");
