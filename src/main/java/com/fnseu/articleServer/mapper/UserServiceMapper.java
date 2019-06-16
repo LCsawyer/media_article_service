@@ -14,13 +14,9 @@ import java.util.List;
  */
 @Mapper
 public interface UserServiceMapper {
-//根据编号查询
-    @Results(value = {
-    @Result(id = true,property = "userId",column = "id"),
-    @Result(property = "userName",column = "real_name")//property是ide中的名字，后面是mysql中的的列名
-    })
-    @Select("select * from user where id=#{0}")
-    User selById(int id);//业务逻辑层的接口
+//查询某个审核人员某个状态全部记录
+    @Select("SELECT COUNT(*) FROM authentication WHERE reviewer_id =#{0} AND STATUS = #{1};")
+    int selAll(BigInteger reviewer_id, Integer STATUS);//业务逻辑层的接口
 
 //根据id查询用户   子查询<---功能1：身份审核申请列表
     @Results({
@@ -29,6 +25,11 @@ public interface UserServiceMapper {
             })
     @Select(" SELECT * FROM user WHERE id=#{userId};")//可以筛选显示的内容
     public User selectescById(int userId);//以java类为中心，来返回
+
+
+    //根据id查询用户，返回记录条数
+    @Select(" SELECT count(*) FROM user WHERE id=#{userId};")//可以筛选显示的内容
+    public int RecorderNumsById(int userId);//以java类为中心，来返回
 
 
 //功能1：身份审核申请列表
@@ -59,7 +60,7 @@ public interface UserServiceMapper {
             @Result(property = "create_time",column = "create_time"),//提交时间
             @Result(property = "operator_name",column = "operator_name"),//运营者姓名
     })//一对一的column项1：子查询的形参 2 逻辑上的两个表关联的桥梁，从数据库中查询id丢给后面的查询语句，但绘制为user即是property
-    @Select("SELECT * FROM authentication WHERE reviewer_id = #{reviewer_id} AND STATUS =#{STATUS} limit #{offset},#{capacity};")//数据首先要查出来，然后是映射对
+    @Select("SELECT * FROM authentication WHERE reviewer_id = #{0} AND STATUS =#{1} limit #{3},#{2};")//数据首先要查出来，然后是映射对
     List<Authentication> selAuthticationList(BigInteger reviewer_id, Integer STATUS,Integer capacity, Integer offset);//业务逻辑层的接口
 
     /**

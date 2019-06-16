@@ -24,6 +24,8 @@ public class Authentication {
     private int status;                     //状态
     private User user;
 
+    public Authentication() {}
+
     public Authentication(BigInteger certificateId, BigInteger user_id, String name, String description, int role, int field, String head_portrait, String operator_name, String id_number, String enterprise_name, String enterprise_id, String license_picture, String internet_license_picture, Timestamp create_time, Timestamp update_time, Timestamp review_time, BigInteger reviewer_id, String review_description, int status, User user) {
         this.certificateId = certificateId;
         this.user_id = user_id;
@@ -46,8 +48,6 @@ public class Authentication {
         this.status = status;
         this.user = user;
     }
-
-    public Authentication() {}
 
     public BigInteger getCertificateId() {
         return certificateId;
@@ -73,12 +73,52 @@ public class Authentication {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public int getRole() {
         return role;
     }
 
     public void setRole(int role) {
         this.role = role;
+    }
+
+    public int getField() {
+        return field;
+    }
+
+    public void setField(int field) {
+        this.field = field;
+    }
+
+    public String getHead_portrait() {
+        return head_portrait;
+    }
+
+    public void setHead_portrait(String head_portrait) {
+        this.head_portrait = head_portrait;
+    }
+
+    public String getOperator_name() {
+        return operator_name;
+    }
+
+    public void setOperator_name(String operator_name) {
+        this.operator_name = operator_name;
+    }
+
+    public String getId_number() {
+        return id_number;
+    }
+
+    public void setId_number(String id_number) {
+        this.id_number = id_number;
     }
 
     public String getEnterprise_name() {
@@ -121,54 +161,6 @@ public class Authentication {
         this.create_time = create_time;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getField() {
-        return field;
-    }
-
-    public void setField(int field) {
-        this.field = field;
-    }
-
-    public String getHead_portrait() {
-        return head_portrait;
-    }
-
-    public void setHead_portrait(String head_portrait) {
-        this.head_portrait = head_portrait;
-    }
-
-    public String getOperator_name() {
-        return operator_name;
-    }
-
-    public void setOperator_name(String operator_name) {
-        this.operator_name = operator_name;
-    }
-
-    public String getId_number() {
-        return id_number;
-    }
-
-    public void setId_number(String id_number) {
-        this.id_number = id_number;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public Timestamp getUpdate_time() {
         return update_time;
     }
@@ -207,5 +199,39 @@ public class Authentication {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return "Authentication{" +
+                "certificateId=" + certificateId +
+                ", user_id=" + user_id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", role=" + role +
+                ", field=" + field +
+                ", head_portrait='" + head_portrait + '\'' +
+                ", operator_name='" + operator_name + '\'' +
+                ", id_number='" + id_number + '\'' +
+                ", enterprise_name='" + enterprise_name + '\'' +
+                ", enterprise_id='" + enterprise_id + '\'' +
+                ", license_picture='" + license_picture + '\'' +
+                ", internet_license_picture='" + internet_license_picture + '\'' +
+                ", create_time=" + create_time +
+                ", update_time=" + update_time +
+                ", review_time=" + review_time +
+                ", reviewer_id=" + reviewer_id +
+                ", review_description='" + review_description + '\'' +
+                ", status=" + status +
+                ", user=" + user +
+                '}';
     }
 }

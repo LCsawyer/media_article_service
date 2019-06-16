@@ -22,11 +22,17 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserServiceMapper userServiceMapper;//DAO 层
 
-//根据编号查询
+//查询全部
     @Override
-    public User selById(int id) {
-        return userServiceMapper.selById(id);
+    public int selAll(BigInteger reviewer_id, Integer STATUS){
+        return userServiceMapper.selAll(reviewer_id,STATUS);
     }
+
+    @Override
+    public int RecorderNumsById(int userId){
+        return userServiceMapper.RecorderNumsById(userId);
+    }
+
 
     @Override
     public List<User> selByName(String name) {
