@@ -1,6 +1,7 @@
 package com.fnseu.articleServer.service;
 
 import com.fnseu.articleServer.pojo.Article;
+import com.fnseu.articleServer.pojo.PageInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
 public interface ArticleManagerService {
     Article selById(Long id);
     int delById(Long id);
-    List<Article> ListArticle();
     int saveArticle(Article article);
     int updateArticle(Article article);
+    PageInfo selArticleList(Long articleId,Integer status,Integer pageNum,Integer pageSize);
 }

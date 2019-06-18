@@ -2,29 +2,19 @@ package com.fnseu.articleServer.pojo;
 
 /**
  * @Author: LiChao
- * @Date: 2019/6/12 19:20
+ * @Date: 2019/6/18 14:35
  */
 public class ArticleInfo {
-    private Long articleId;
-
-    private Integer status; //审核结果
+    private Long id;
     private String title;
-    private Long authorId;
+    private Integer status;
 
-    public Long getArticleId() {
-        return articleId;
+    public Long getId() {
+        return id;
     }
 
-    public void setArticleId(Long articleId) {
-        this.articleId = articleId;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -35,11 +25,11 @@ public class ArticleInfo {
         this.title = title;
     }
 
-    public Long getAuthorId() {
-        return authorId;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setAuthorId(Long authorId) {
-        this.authorId = authorId;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

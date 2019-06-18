@@ -4,31 +4,31 @@ import java.sql.Timestamp;
 
 /**
  * @Author: LiChao
- * @Date: 2019/6/12 19:19
+ * @Date: 2019/6/18 13:33
  */
 public class Review {
-    private Long reviewId;
-    private long reviewerId;
+    private Long id;
+    private Long reviewerId;
     private Long contentId;
     private Integer contentType;
     private Integer level;
     private Integer result;
-    private Timestamp reviewTime;
     private String description;
+    private Timestamp reviewTime;
 
-    public Long getReviewId() {
-        return reviewId;
+    public Long getId() {
+        return id;
     }
 
-    public void setReviewId(Long reviewId) {
-        this.reviewId = reviewId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public long getReviewerId() {
+    public Long getReviewerId() {
         return reviewerId;
     }
 
-    public void setReviewerId(long reviewerId) {
+    public void setReviewerId(Long reviewerId) {
         this.reviewerId = reviewerId;
     }
 
@@ -64,19 +64,19 @@ public class Review {
         this.result = result;
     }
 
-    public Timestamp getReviewTime() {
-        return reviewTime;
-    }
-
-    public void setReviewTime(Timestamp reviewTime) {
-        this.reviewTime = reviewTime;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Timestamp getReviewTime() {
+        return reviewTime;
+    }
+
+    public void setReviewTime(Timestamp reviewTime) {
+        this.reviewTime = reviewTime;
     }
 }

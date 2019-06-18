@@ -2,6 +2,8 @@ package com.fnseu.articleServer.service.impl;
 
 import com.fnseu.articleServer.mapper.ArticleManagerMapper;
 import com.fnseu.articleServer.pojo.Article;
+import com.fnseu.articleServer.pojo.ArticleInfo;
+import com.fnseu.articleServer.pojo.PageInfo;
 import com.fnseu.articleServer.service.ArticleManagerService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,10 +32,6 @@ public class ArticleManagerServiceImpl implements ArticleManagerService {
 
     }
 
-    @Override
-    public List<Article> ListArticle() {
-        return articleManagerMapper.ListArticle();
-    }
 
     @Override
     public int saveArticle(Article article){
@@ -42,4 +40,23 @@ public class ArticleManagerServiceImpl implements ArticleManagerService {
 
     @Override
     public int updateArticle(Article article){ return articleManagerMapper.updateArticle(article);}
+
+    @Override
+    public PageInfo selArticleList(Long authorId, Integer status, Integer pageNum, Integer pageSize) {
+        PageInfo pageInfo = new PageInfo();
+        int count = articleManagerMapper.selCount(authorId,status);
+        if (count<=0){
+            return null;
+        }
+        List<ArticleInfo> list = articleManagerMapper.selListArticle(authorId,status,(pageNum-1)*pageSize,pageSize);
+        if (list==null || list.size()==0){
+            return null;
+        }
+        pageInfo.setPageNum(pageNum);
+        pageInfo.setPageSize(pageSize);
+        pageInfo.setTotal(count%pageSize==0?count/pageSize:count/pageSize+1);
+        pageInfo.setPageStart((pageNum-1)*pageSize);
+        pageInfo.setList(list);
+        return pageInfo;
+    }
 }

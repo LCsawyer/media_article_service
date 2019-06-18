@@ -21,14 +21,9 @@ public interface UserMapper {
     @Select("select * from user where id=#{0}")
     User selById(Long id);//业务逻辑层的接口
 
-    //根据id查询用户   子查询<---功能1：身份审核申请列表
-    @Results({
-            @Result(column="id",property="userId",id=true),
-            @Result(column="real_name",property="userName"),
-    })
-    @Select(" SELECT * FROM user WHERE id=#{userId};")//可以筛选显示的内容
-    public User selectescById(Long userId);//以java类为中心，来返回
 
+    @Select("select count(*) from authentication where reviewer_id=#{0} and status=#{1}")
+    int countAuth(Long reviewer_id,Integer STATUS);
 
     //功能1：身份审核申请列表
     @Results(value = {
@@ -40,8 +35,8 @@ public interface UserMapper {
             @Result(property = "createTime",column = "create_time"),//提交时间
             @Result(property = "operatorName",column = "operator_name"),//运营者姓名
     })//一对一的column项1：子查询的形参 2 逻辑上的两个表关联的桥梁，从数据库中查询id丢给后面的查询语句，但绘制为user即是property
-    @Select("SELECT * FROM authentication WHERE reviewer_id = #{reviewer_id} AND STATUS =#{STATUS} limit #{offset},#{capacity};")//数据首先要查出来，然后是映射对
-    List<Authentication> selAuthticationList(Long reviewer_id, Integer STATUS, Integer capacity, Integer offset);//业务逻辑层的接口
+    @Select("SELECT * FROM authentication WHERE reviewer_id = #{reviewer_id} AND status=#{STATUS} limit #{offset},#{capacity};")//数据首先要查出来，然后是映射对
+    List<Authentication> selAuthticationList(Long reviewer_id, Integer STATUS, Integer offset, Integer capacity);//业务逻辑层的接口
 
     /**
      * 功能2

@@ -1,6 +1,6 @@
 package com.fnseu.articleServer.service;
 
-import com.fnseu.articleServer.pojo.ArticleReviewInfo;
+import com.fnseu.articleServer.pojo.PageInfo;
 import com.fnseu.articleServer.pojo.Review;
 import com.fnseu.articleServer.pojo.User;
 
@@ -11,14 +11,10 @@ import java.util.List;
  * @Date: 2019/6/12 20:23
  */
 public interface ArticleReviewService {
-    User selById(Long id);
-    List<User> selByName(String name);
+    PageInfo selArticleReviews(Integer status,Integer pageNum,Integer pageSize);
 
-    Review selReviewById(Long id);
+    int insReview(Review review);
+    //ArticleInfo selArticleInfoById(Long id);
 
-    List<Review> listReview();
-
-    List<ArticleReviewInfo> listArticleReview(Integer status);
-
-    int addReview(Review revData);
+    int updStatus(Integer status,Long articleId);
 }

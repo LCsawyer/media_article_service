@@ -1,5 +1,7 @@
 package com.fnseu.articleServer.pojo;
 
+import java.sql.Timestamp;
+
 /**
  * @Author: LiChao
  * @Date: 2019/6/12 19:28
@@ -8,16 +10,95 @@ public class Article {
     private Long id;
     private Integer version;
     private String title;
-    private String Abstract;
-    private String Keywords;
+    private String descriptions;
+    private String keywords;
     private String entities;
+    private String pictures;
+    private Integer level;
     private String source;
     private String category;
+    private String subcategory;
+    private Integer isOriginal;
+    private Timestamp createTime;
+    private Timestamp updateTime;
+    private Timestamp publishTime;
     private String body;
     private Long authorId;
 
+    public Timestamp getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Timestamp updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Timestamp getPublishTime() {
+        return publishTime;
+    }
+
+    public void setPublishTime(Timestamp publishTime) {
+        this.publishTime = publishTime;
+    }
+
     public Long getId() {
         return id;
+    }
+
+    public String getDescriptions() {
+        return descriptions;
+    }
+
+    public void setDescriptions(String descriptions) {
+        this.descriptions = descriptions;
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
+    public String getPictures() {
+        return pictures;
+    }
+
+    public void setPictures(String pictures) {
+        this.pictures = pictures;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public String getSubcategory() {
+        return subcategory;
+    }
+
+    public void setSubcategory(String subcategory) {
+        this.subcategory = subcategory;
+    }
+
+    public Integer getIsOriginal() {
+        return isOriginal;
+    }
+
+    public void setIsOriginal(Integer isOriginal) {
+        this.isOriginal = isOriginal;
+    }
+
+    public Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
     }
 
     public void setId(Long id) {
@@ -38,22 +119,6 @@ public class Article {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getAbstract() {
-        return Abstract;
-    }
-
-    public void setAbstract(String anAbstract) {
-        Abstract = anAbstract;
-    }
-
-    public String getKeywords() {
-        return Keywords;
-    }
-
-    public void setKeywords(String keywords) {
-        Keywords = keywords;
     }
 
     public String getEntities() {
