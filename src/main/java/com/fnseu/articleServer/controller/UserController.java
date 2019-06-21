@@ -1,10 +1,8 @@
 package com.fnseu.articleServer.controller;
 
-import com.fnseu.articleServer.pojo.Authentication;
-import com.fnseu.articleServer.pojo.PageInfo;
-import com.fnseu.articleServer.pojo.ResponseBean;
-import com.fnseu.articleServer.pojo.User;
+import com.fnseu.articleServer.pojo.*;
 import com.fnseu.articleServer.service.UserService;
+import com.fnseu.articleServer.util.RabbitMQSender;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +24,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RabbitMQSender rabbitMQSender;
 
     //根据编号查询
 //    @GetMapping(value = "/user/{id}")
@@ -63,16 +64,13 @@ public class UserController {
         return new ResponseBean<Authentication>(200,"ok",authentication);
     }
 
-    @ApiOperation(value = "身份审核反馈",notes="向用户反馈审核结果")
-    @ApiImplicitParam(name="authentication",value="审核反馈信息",required = true,dataType = "Authentication")
+    @ApiOperation(value = "身份审核反馈",notes="向用户反馈审核结果，反馈信息存入消息队列")
+    @ApiImplicitParam(name="authentication",value="审核反馈信息",required = true,dataType = "AuthReviewInfo")
     @PostMapping(path = "/UserReviews")
-    public ResponseBean insertAuth(@RequestBody Authentication authentication){
+    public ResponseBean insertAuth(@RequestBody AuthReviewInfo authentication){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        authentication.setUpdateTime(timestamp);
-        int index = userService.insertAuth(authentication);
-        if (index>0){
-            return new ResponseBean(201,"Created",null);
-        }
-        return new ResponseBean(404,"Not Found",null);
+        authentication.setReviewTime(timestamp);
+        rabbitMQSender.senderUserReviewInfo(authentication);
+        return new ResponseBean(200,"ok",null);
     }
 }

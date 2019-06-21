@@ -2,6 +2,7 @@ package com.fnseu.articleServer.controller;
 
 import com.fnseu.articleServer.pojo.*;
 import com.fnseu.articleServer.service.ArticleReviewService;
+import com.fnseu.articleServer.util.RabbitMQSender;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -19,6 +20,9 @@ import java.util.List;
 public class ArticleReviewController {
     @Autowired
     private ArticleReviewService articleReviewService;
+
+    @Autowired
+    private RabbitMQSender rabbitMQSender;
 
 //    @Value("${feign.hystrix.enabled}")
 //    private String testScope;
@@ -42,17 +46,17 @@ public class ArticleReviewController {
     }
 
 
-    @ApiOperation(value = "内容审核反馈",notes = "内容审核反馈")
+    @ApiOperation(value = "内容审核反馈",notes = "内容审核反馈,反馈信息存入消息队列")
     @ApiImplicitParam(name="articleReview",value = "内容反馈信息",required = true,dataType = "Review")
     @PostMapping(value = "/articleReviews")
     public ResponseBean addArticleReview(@RequestBody Review articleReview){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         articleReview.setReviewTime(timestamp);
-        int index = articleReviewService.insReview(articleReview);
-        if (index<0){
+        int index = articleReviewService.updStatus(articleReview.getResult(),articleReview.getContentId());
+        if(index<=0){
             return new ResponseBean(404,"Not Found",null);
         }
-        articleReviewService.updStatus(articleReview.getResult(),articleReview.getContentId());
+        rabbitMQSender.senderArticleReviewInfo(articleReview);
         return new ResponseBean(201,"Created",null);
     }
 }
