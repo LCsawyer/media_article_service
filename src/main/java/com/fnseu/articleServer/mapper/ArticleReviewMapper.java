@@ -30,4 +30,5 @@ public interface ArticleReviewMapper {
     @Update("update article set status=#{0} where id=#{1}")
     int updStatus(Integer status,Long articleId);
 
+
 }

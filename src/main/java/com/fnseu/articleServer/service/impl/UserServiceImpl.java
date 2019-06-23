@@ -1,6 +1,7 @@
 package com.fnseu.articleServer.service.impl;
 
 import com.fnseu.articleServer.mapper.UserMapper;
+import com.fnseu.articleServer.pojo.AuthReviewInfo;
 import com.fnseu.articleServer.pojo.Authentication;
 import com.fnseu.articleServer.pojo.PageInfo;
 import com.fnseu.articleServer.service.UserService;
@@ -53,5 +54,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public int insertAuth(Authentication authentication){
         return userMapper.insertAuth(authentication);
+    }
+
+    @Override
+    public int updAuthReview(AuthReviewInfo authReviewInfo) {
+        return userMapper.updAuthReview(authReviewInfo);
     }
 }

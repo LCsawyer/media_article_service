@@ -15,6 +15,15 @@ public class Review {
     private Integer result;
     private String description;
     private Timestamp reviewTime;
+    private Long authorId;
+
+    public Long getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
+    }
 
     public Long getId() {
         return id;

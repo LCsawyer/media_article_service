@@ -1,5 +1,6 @@
 package com.fnseu.articleServer.service;
 
+import com.fnseu.articleServer.pojo.AuthReviewInfo;
 import com.fnseu.articleServer.pojo.Authentication;
 import com.fnseu.articleServer.pojo.PageInfo;
 import com.fnseu.articleServer.pojo.User;
@@ -16,4 +17,5 @@ public interface UserService {
     PageInfo selAuthticationList(Long reviewer_id, Integer STATUS, Integer pageNum, Integer pageSize);
     Authentication selectAuthFileById(Long userId);
     int insertAuth(Authentication authentication);
+    int updAuthReview(AuthReviewInfo authReviewInfo);
 }

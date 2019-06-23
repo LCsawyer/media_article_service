@@ -45,4 +45,7 @@ public interface ArticleManagerMapper {
 
     @UpdateProvider(type = ArticleDynamicSqlProvider.class,method = "update")
     int updateArticle(Article article);
+
+    @Select("select author from article where id=#{0}")
+    Long selUserIdByCountId(Long id);
 }

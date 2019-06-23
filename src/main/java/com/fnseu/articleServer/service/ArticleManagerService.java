@@ -17,4 +17,5 @@ public interface ArticleManagerService {
     int saveArticle(Article article);
     int updateArticle(Article article);
     PageInfo selArticleList(Long articleId,Integer status,Integer pageNum,Integer pageSize);
+    Long selAuthorId(Long id);
 }

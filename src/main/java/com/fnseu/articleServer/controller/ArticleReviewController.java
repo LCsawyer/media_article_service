@@ -1,6 +1,7 @@
 package com.fnseu.articleServer.controller;
 
 import com.fnseu.articleServer.pojo.*;
+import com.fnseu.articleServer.service.ArticleManagerService;
 import com.fnseu.articleServer.service.ArticleReviewService;
 import com.fnseu.articleServer.util.RabbitMQSender;
 import io.swagger.annotations.ApiImplicitParam;
@@ -20,6 +21,9 @@ import java.util.List;
 public class ArticleReviewController {
     @Autowired
     private ArticleReviewService articleReviewService;
+
+    @Autowired
+    private ArticleManagerService articleManagerService;
 
     @Autowired
     private RabbitMQSender rabbitMQSender;
@@ -52,6 +56,9 @@ public class ArticleReviewController {
     public ResponseBean addArticleReview(@RequestBody Review articleReview){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         articleReview.setReviewTime(timestamp);
+        Long id = articleManagerService.selAuthorId(articleReview.getContentId());
+        articleReview.setAuthorId(id);
+        articleReviewService.insReview(articleReview);
         int index = articleReviewService.updStatus(articleReview.getResult(),articleReview.getContentId());
         if(index<=0){
             return new ResponseBean(404,"Not Found",null);

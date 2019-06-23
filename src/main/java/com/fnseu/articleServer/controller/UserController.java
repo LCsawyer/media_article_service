@@ -70,6 +70,7 @@ public class UserController {
     public ResponseBean insertAuth(@RequestBody AuthReviewInfo authentication){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         authentication.setReviewTime(timestamp);
+        userService.updAuthReview(authentication);
         rabbitMQSender.senderUserReviewInfo(authentication);
         return new ResponseBean(200,"ok",null);
     }

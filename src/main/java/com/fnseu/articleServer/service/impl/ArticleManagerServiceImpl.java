@@ -59,4 +59,9 @@ public class ArticleManagerServiceImpl implements ArticleManagerService {
         pageInfo.setList(list);
         return pageInfo;
     }
+
+    @Override
+    public Long selAuthorId(Long id) {
+        return articleManagerMapper.selUserIdByCountId(id);
+    }
 }

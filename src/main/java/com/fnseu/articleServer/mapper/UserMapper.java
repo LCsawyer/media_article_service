@@ -1,5 +1,6 @@
 package com.fnseu.articleServer.mapper;
 
+import com.fnseu.articleServer.pojo.AuthReviewInfo;
 import com.fnseu.articleServer.pojo.Authentication;
 import com.fnseu.articleServer.pojo.User;
 import org.apache.ibatis.annotations.*;
@@ -71,4 +72,8 @@ public interface UserMapper {
      */
     @Insert("insert into authentication(user_id,name) values(#{user_id},#{name})")
     public int insertAuth(Authentication authentication);
+
+    @Update("update authentication set reviewer_id=#{reviewerId},review_description=#" +
+            "{reviewDescription},status=#{status},review_time=#{reviewTime} where user_id=#{userId}")
+    int updAuthReview(AuthReviewInfo authReviewInfo);
 }
