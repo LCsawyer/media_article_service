@@ -10,6 +10,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -42,7 +45,9 @@ public class ArticleManagerController {
     @ApiOperation(value = "文章详情查询",notes = "根据id查询文章详情")
     @ApiImplicitParam(name="id",value = "文章id",required = true,dataType = "Long",paramType = "path")
     @GetMapping(value = "/articles/{id}")
-    public ResponseBean<Article> getUser(@PathVariable Long id){
+    public ResponseBean<Article> getUser(@PathVariable Long id, HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         Article article = articleManagerService.selById(id);
         if (article==null){
             return new ResponseBean<Article>(404,"Not Found",null);
