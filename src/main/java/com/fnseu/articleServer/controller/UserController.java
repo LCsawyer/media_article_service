@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -35,16 +36,21 @@ public class UserController {
 //    }
 
 
-    @ApiOperation(value = "身份审核申请列表查询",notes="查询用户身份认证信息，分页查询方式")
+    @ApiOperation(value = "身份审核申请列表查询",notes="查询用户身份认证信息，分页查询方式,")
     @ApiImplicitParams(value = {
-            @ApiImplicitParam(name="reviewer_id",value="审核人员id",required = true,dataType = "Long"),
+//            @ApiImplicitParam(name="reviewer_id",value="审核人员id",required = true,dataType = "Long"),
             @ApiImplicitParam(name="STATUS",value="审核状态",required = true,dataType = "Integer"),
             @ApiImplicitParam(name="pageSize",value="一页显示条数，默认10",required = true,dataType = "Integer"),
             @ApiImplicitParam(name="pageNum",value="当前页号",required = true,dataType = "Integer")
     })
     @GetMapping("/userReviews")
-    public ResponseBean<PageInfo> selAuthticationList(@RequestParam Long reviewer_id, @RequestParam Integer STATUS,
-                                            @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Integer pageNum){
+    public ResponseBean<PageInfo> selAuthticationList(@RequestParam Integer STATUS, @RequestParam(defaultValue = "10")
+            Integer pageSize, @RequestParam Integer pageNum, HttpServletRequest request){
+        String userIdStr = request.getHeader("userId");
+        if (userIdStr==null){
+            return new ResponseBean<>(404,"No user",null);
+        }
+        Long reviewer_id = Long.parseLong(userIdStr);
         PageInfo pageInfo = userService.selAuthticationList(reviewer_id,STATUS,pageNum,pageSize);//offset值
         if (pageInfo==null){
             return new ResponseBean<PageInfo>(404,"Not Found",null);

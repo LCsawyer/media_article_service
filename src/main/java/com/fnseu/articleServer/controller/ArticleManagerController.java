@@ -7,11 +7,14 @@ import com.fnseu.articleServer.service.ArticleManagerService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
 import java.util.List;
@@ -29,23 +32,108 @@ public class ArticleManagerController {
     //    @Value("${feign.hystrix.enabled}")
     //private String testScope;
 
-    @ApiOperation(value = "文章上传",notes = "用户将文章上传")
-    @ApiImplicitParam(name="article",value = "文章相关信息",required = true,dataType = "Article")
+    @ApiOperation(value = "文章保存",notes = "用户将文章保存")
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(name="article",value = "title、body、pictures和level用户自己填写，" +
+                    "id和version无论有无均需上传",required = true,dataType = "Article"),
+            @ApiImplicitParam(name="opFlag",value = "取值为0或1,默认为0，代表未发布",required = true,dataType = "Integer"),
+            @ApiImplicitParam(name="saveFlag",value = "取值为0或1,默认为0，代表未保存",required = true,dataType = "Integer"),
+    })
     @PostMapping(value="/articles")
-    public ResponseBean saveArticle(@RequestBody Article article){
+    public ResponseBean saveArticle(@RequestBody Article article,@RequestParam("0") Integer opFlag,
+                                    @RequestParam("0") Integer saveFlag,HttpServletRequest request){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        article.setCreateTime(timestamp);
-        int index = articleManagerService.saveArticle(article);
-        if (index>0){
-            return new ResponseBean(201,"Created",null);
+        String userIdStr = request.getHeader("userId");
+        if (userIdStr==null){
+            return new ResponseBean(404,"No user",null);
         }
-        return new ResponseBean(404,"Not Found",null);
+        Long userId = Long.parseLong(userIdStr);
+        article.setAuthorId(userId);
+        article.setStatus(0);
+        int index =0;
+        if (opFlag==0){
+            if (saveFlag==0){
+                article.setCreateTime(timestamp);
+                index = articleManagerService.saveArticle(article);
+            }
+            else{
+                article.setUpdateTime(timestamp);
+                index = articleManagerService.updateArticle(article);
+
+            }
+        }
+        else{
+            if (saveFlag==0){
+                article.setCreateTime(timestamp);
+                article.setVersion(article.getVersion()+1);
+                index = articleManagerService.insArticle(article);
+            }
+            else{
+                article.setUpdateTime(timestamp);
+                index = articleManagerService.updateArticle(article);
+            }
+        }
+        if (index<=0){
+            return new ResponseBean(404,"Not Found",null);
+        }
+        else{
+            return new ResponseBean(201,"created",null);
+        }
     }
+
+    @ApiOperation(value = "文章提交",notes = "用户将文章提交")
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(name="article",value = "title、body、pictures和level用户自己填写，" +
+                    "id和version无论有无均需上传",required = true,dataType = "Article"),
+            @ApiImplicitParam(name="opFlag",value = "取值为0或1,默认为0，代表未发布",required = true,dataType = "Integer"),
+            @ApiImplicitParam(name="saveFlag",value = "取值为0或1,默认为0，代表未保存",required = true,dataType = "Integer"),
+    })
+    @PostMapping(value = "/articles/submit")
+    public ResponseBean submitArticle(@RequestBody Article article,@RequestParam("0") Integer opFlag,
+                                      @RequestParam("0") Integer saveFlag,HttpServletRequest request){
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String userIdStr = request.getHeader("userId");
+        if (userIdStr==null){
+            return new ResponseBean(404,"No user",null);
+        }
+        Long userId = Long.parseLong(userIdStr);
+        article.setAuthorId(userId);
+        article.setStatus(article.getLevel()+1);
+        int index = 0;
+        if (opFlag==0){
+            article.setCommitTime(timestamp);
+            if (saveFlag==0){
+                article.setCreateTime(timestamp);
+                index = articleManagerService.saveArticle(article);
+            }
+            else{
+                index = articleManagerService.updStatus(article.getId(),article.getStatus(),article.getVersion());
+            }
+        }
+        else{
+            article.setCommitTime(timestamp);
+            if (saveFlag==0){
+                article.setCreateTime(timestamp);
+                article.setVersion(article.getVersion()+1);
+                index = articleManagerService.insArticle(article);
+            }
+            else {
+                index = articleManagerService.updStatus(article.getId(),article.getStatus(),article.getVersion());
+            }
+        }
+        if (index<=0){
+            return new ResponseBean(404,"Not Found",null);
+        }
+        else{
+            return new ResponseBean(201,"created",null);
+        }
+    }
+
 
     @ApiOperation(value = "文章详情查询",notes = "根据id查询文章详情")
     @ApiImplicitParam(name="id",value = "文章id",required = true,dataType = "Long",paramType = "path")
     @GetMapping(value = "/articles/{id}")
-    public ResponseBean<Article> getUser(@PathVariable Long id, HttpServletResponse response){
+    public ResponseBean<Article> getArticle(@PathVariable Long id, HttpServletResponse response){
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         Article article = articleManagerService.selById(id);
@@ -55,18 +143,24 @@ public class ArticleManagerController {
         return new ResponseBean<Article>(200,"ok",article);
     }
 
-    @ApiOperation(value = "文章列表分页查询",notes="根据作者id和文章状态查询")
+    @ApiOperation(value = "文章列表分页查询",notes="根据作者id,作者id不用显示传，和文章状态查询")
     @ApiImplicitParams(value = {
-            @ApiImplicitParam(name="authorId",value="作者ID",required = true,dataType = "Long"),
+            //@ApiImplicitParam(name="authorId",value="作者ID",required = true,dataType = "Long"),
             @ApiImplicitParam(name="status",value="文章状态",required = true,dataType = "Integer"),
             @ApiImplicitParam(name="pageNum",value="当前页号从1开始，默认1",required = true,dataType = "Integer"),
             @ApiImplicitParam(name="pageSize",value="一页显示条数，默认10",required = true,dataType = "Integer"),
     })
     @GetMapping("/articles")
-    public ResponseBean<PageInfo> ListArticle(@RequestParam Long authorId,@RequestParam Integer status,
+    public ResponseBean<PageInfo> ListArticle(@RequestParam Integer status,
                                               @RequestParam(defaultValue = "1") Integer pageNum,
-                                              @RequestParam(defaultValue = "10") Integer pageSize){
-        PageInfo pageInfo = articleManagerService.selArticleList(authorId,status,pageNum,pageSize);
+                                              @RequestParam(defaultValue = "10") Integer pageSize,HttpServletRequest request){
+        String userIdStr = request.getHeader("userId");
+        if (userIdStr==null){
+            return new ResponseBean<>(404,"No user",null);
+        }
+        Long userId = Long.parseLong(userIdStr);
+        //System.out.println(userId);
+        PageInfo pageInfo = articleManagerService.selArticleList(userId,status,pageNum,pageSize);
         if (pageInfo==null){
             return new ResponseBean<PageInfo>(404,"Not Found",null);
         }
@@ -84,16 +178,4 @@ public class ArticleManagerController {
         return new ResponseBean(404,"Not Found",null);
     }
 
-    @ApiOperation(value = "文章更新",notes = "用户更新相关文章信息")
-    @ApiImplicitParam(name="article",value = "文章相关信息，可不全",required = true,dataType = "Article")
-    @PutMapping(value="/articles")
-    public ResponseBean updateArticle(@RequestBody Article article){
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        article.setUpdateTime(timestamp);
-        int index = articleManagerService.updateArticle(article);
-        if (index>0){
-            return new ResponseBean(201,"update",null);
-        }
-        return new ResponseBean(404,"Not found",null);
-    }
 }

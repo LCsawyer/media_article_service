@@ -64,4 +64,14 @@ public class ArticleManagerServiceImpl implements ArticleManagerService {
     public Long selAuthorId(Long id) {
         return articleManagerMapper.selUserIdByCountId(id);
     }
+
+    @Override
+    public int insArticle(Article article) {
+        return articleManagerMapper.insArticle(article);
+    }
+
+    @Override
+    public int updStatus(Long id, Integer status, Integer version) {
+        return articleManagerMapper.updStatus(id,status,version);
+    }
 }

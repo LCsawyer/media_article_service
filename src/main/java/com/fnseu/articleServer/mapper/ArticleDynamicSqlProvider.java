@@ -39,7 +39,7 @@ public class ArticleDynamicSqlProvider {
                 if (article.getUpdateTime()!=null && !article.getUpdateTime().equals("")){
                     SET("update_time=#{updateTime}");
                 }
-                WHERE("id=#{id}");
+                WHERE("id=#{id} and version=#{version}");
             }
         }.toString();
     }

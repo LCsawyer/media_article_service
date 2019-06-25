@@ -22,8 +22,26 @@ public class Article {
     private Timestamp createTime;
     private Timestamp updateTime;
     private Timestamp publishTime;
+    private Timestamp commitTime;
+    private Integer status;
     private String body;
     private Long authorId;
+
+    public Timestamp getCommitTime() {
+        return commitTime;
+    }
+
+    public void setCommitTime(Timestamp commitTime) {
+        this.commitTime = commitTime;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public Timestamp getUpdateTime() {
         return updateTime;

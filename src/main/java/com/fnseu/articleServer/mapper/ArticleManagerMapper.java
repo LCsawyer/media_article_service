@@ -20,10 +20,10 @@ public interface ArticleManagerMapper {
             @Result(property = "authorId",column = "author"),
             @Result(property = "publishTime",column = "publish_time")
     })
-    @Select("select * from article where id=#{0}")
+    @Select("select * from article where id=#{0} and version=#{1}")
     Article selById(Long id);
 
-    @Delete("delete from article where id=#{0}")
+    @Delete("delete from article where id=#{0} and version=#{1}")
     int delById(Long id);
 
     @Results(value = {
@@ -37,15 +37,24 @@ public interface ArticleManagerMapper {
     @Select("select count(*) from article where author=#{0} and status=#{1}")
     int selCount(Long authorId, Integer status);
 
-    @Insert("insert into article(id,title,author,body,abstract,keywords,entities,pictures,level,source," +
-            "category,subcategory,is_original,create_time) VALUES(default,#{title},#{authorId},#{body}," +
+    @Insert("insert into article(id,version,title,author,body,abstract,keywords,entities,pictures,level,source," +
+            "category,subcategory,is_original,create_time,commit_time) VALUES(default,1,#{title},#{authorId},#{body}," +
+            "#{descriptions},#{keywords},#{entities},#{pictures},#{level},#{source},#{category}," +
+            "#{subcategory},#{isOriginal},#{createTime},#{commitTime})")
+    int saveArticle(Article article);
+
+    @Insert("insert into article(id,version,title,author,body,abstract,keywords,entities,pictures,level,source," +
+            "category,subcategory,is_original,create_time) VALUES(#{id},#{version},#{title},#{authorId},#{body}," +
             "#{descriptions},#{keywords},#{entities},#{pictures},#{level},#{source},#{category}," +
             "#{subcategory},#{isOriginal},#{createTime})")
-    int saveArticle(Article article);
+    int insArticle(Article article);
 
     @UpdateProvider(type = ArticleDynamicSqlProvider.class,method = "update")
     int updateArticle(Article article);
 
     @Select("select author from article where id=#{0}")
     Long selUserIdByCountId(Long id);
+
+    @Update("update article set status=#{1} where id=#{0} and version=#{3}")
+    int updStatus(Long id,Integer status,Integer version);
 }

@@ -18,4 +18,6 @@ public interface ArticleManagerService {
     int updateArticle(Article article);
     PageInfo selArticleList(Long articleId,Integer status,Integer pageNum,Integer pageSize);
     Long selAuthorId(Long id);
+    int insArticle(Article article);
+    int updStatus(Long id,Integer status,Integer version);
 }
