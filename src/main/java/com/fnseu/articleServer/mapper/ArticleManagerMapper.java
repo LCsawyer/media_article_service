@@ -38,7 +38,7 @@ public interface ArticleManagerMapper {
     int selCount(Long authorId, Integer status);
 
     @Insert("insert into article(id,version,title,author,body,abstract,keywords,entities,pictures,level,source," +
-            "category,subcategory,is_original,create_time,commit_time) VALUES(default,1,#{title},#{authorId},#{body}," +
+            "category,subcategory,is_original,create_time,commit_time) VALUES(default,0,#{title},#{authorId},#{body}," +
             "#{descriptions},#{keywords},#{entities},#{pictures},#{level},#{source},#{category}," +
             "#{subcategory},#{isOriginal},#{createTime},#{commitTime})")
     int saveArticle(Article article);
@@ -46,7 +46,7 @@ public interface ArticleManagerMapper {
     @Insert("insert into article(id,version,title,author,body,abstract,keywords,entities,pictures,level,source," +
             "category,subcategory,is_original,create_time) VALUES(#{id},#{version},#{title},#{authorId},#{body}," +
             "#{descriptions},#{keywords},#{entities},#{pictures},#{level},#{source},#{category}," +
-            "#{subcategory},#{isOriginal},#{createTime})")
+            "#{subcategory},#{isOriginal},#{createTime},#{commitTime})")
     int insArticle(Article article);
 
     @UpdateProvider(type = ArticleDynamicSqlProvider.class,method = "update")
@@ -57,4 +57,7 @@ public interface ArticleManagerMapper {
 
     @Update("update article set status=#{1} where id=#{0} and version=#{3}")
     int updStatus(Long id,Integer status,Integer version);
+
+    @Select("select status from article where id=#{0} and version=#{1}")
+    int selStatus(Long id,Integer version);
 }

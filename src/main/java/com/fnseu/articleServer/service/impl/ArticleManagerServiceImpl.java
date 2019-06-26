@@ -74,4 +74,9 @@ public class ArticleManagerServiceImpl implements ArticleManagerService {
     public int updStatus(Long id, Integer status, Integer version) {
         return articleManagerMapper.updStatus(id,status,version);
     }
+
+    @Override
+    public int selStatus(Long id, Integer version) {
+        return articleManagerMapper.selStatus(id,version);
+    }
 }

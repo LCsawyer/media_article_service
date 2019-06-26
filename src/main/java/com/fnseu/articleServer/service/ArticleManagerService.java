@@ -20,4 +20,5 @@ public interface ArticleManagerService {
     Long selAuthorId(Long id);
     int insArticle(Article article);
     int updStatus(Long id,Integer status,Integer version);
+    int selStatus(Long id,Integer version);
 }

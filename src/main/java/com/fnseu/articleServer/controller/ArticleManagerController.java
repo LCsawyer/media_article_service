@@ -33,15 +33,10 @@ public class ArticleManagerController {
     //private String testScope;
 
     @ApiOperation(value = "文章保存",notes = "用户将文章保存")
-    @ApiImplicitParams(value = {
-            @ApiImplicitParam(name="article",value = "title、body、pictures和level用户自己填写，" +
-                    "id和version无论有无均需上传",required = true,dataType = "Article"),
-            @ApiImplicitParam(name="opFlag",value = "取值为0或1,默认为0，代表未发布",required = true,dataType = "Integer"),
-            @ApiImplicitParam(name="saveFlag",value = "取值为0或1,默认为0，代表未保存",required = true,dataType = "Integer"),
-    })
+    @ApiImplicitParam(name="article",value = "title、body、pictures和level用户自己填写，" +
+            "id和version无论有无均需上传,时间相关属性不上传",required = true,dataType = "Article")
     @PostMapping(value="/articles")
-    public ResponseBean saveArticle(@RequestBody Article article,@RequestParam("0") Integer opFlag,
-                                    @RequestParam("0") Integer saveFlag,HttpServletRequest request){
+    public ResponseBean saveArticle(@RequestBody Article article,HttpServletRequest request){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String userIdStr = request.getHeader("userId");
         if (userIdStr==null){
@@ -51,26 +46,20 @@ public class ArticleManagerController {
         article.setAuthorId(userId);
         article.setStatus(0);
         int index =0;
-        if (opFlag==0){
-            if (saveFlag==0){
-                article.setCreateTime(timestamp);
-                index = articleManagerService.saveArticle(article);
-            }
-            else{
-                article.setUpdateTime(timestamp);
-                index = articleManagerService.updateArticle(article);
-
-            }
+        if (article.getId()==null || article.getId()==0){
+            article.setCreateTime(timestamp);
+            index = articleManagerService.saveArticle(article);
         }
         else{
-            if (saveFlag==0){
+            int status = articleManagerService.selStatus(article.getId(),article.getVersion());
+            if (status==0){
+                article.setUpdateTime(timestamp);
+                index = articleManagerService.updateArticle(article);
+            }
+            else{
                 article.setCreateTime(timestamp);
                 article.setVersion(article.getVersion()+1);
                 index = articleManagerService.insArticle(article);
-            }
-            else{
-                article.setUpdateTime(timestamp);
-                index = articleManagerService.updateArticle(article);
             }
         }
         if (index<=0){
@@ -82,15 +71,10 @@ public class ArticleManagerController {
     }
 
     @ApiOperation(value = "文章提交",notes = "用户将文章提交")
-    @ApiImplicitParams(value = {
-            @ApiImplicitParam(name="article",value = "title、body、pictures和level用户自己填写，" +
-                    "id和version无论有无均需上传",required = true,dataType = "Article"),
-            @ApiImplicitParam(name="opFlag",value = "取值为0或1,默认为0，代表未发布",required = true,dataType = "Integer"),
-            @ApiImplicitParam(name="saveFlag",value = "取值为0或1,默认为0，代表未保存",required = true,dataType = "Integer"),
-    })
+    @ApiImplicitParam(name="article",value = "title、body、pictures和level用户自己填写，" +
+                    "id和version无论有无均需上传，时间相关属性不上传",required = true,dataType = "Article")
     @PostMapping(value = "/articles/submit")
-    public ResponseBean submitArticle(@RequestBody Article article,@RequestParam("0") Integer opFlag,
-                                      @RequestParam("0") Integer saveFlag,HttpServletRequest request){
+    public ResponseBean submitArticle(@RequestBody Article article,HttpServletRequest request){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String userIdStr = request.getHeader("userId");
         if (userIdStr==null){
@@ -98,27 +82,21 @@ public class ArticleManagerController {
         }
         Long userId = Long.parseLong(userIdStr);
         article.setAuthorId(userId);
-        article.setStatus(article.getLevel()+1);
+        article.setCommitTime(timestamp);
         int index = 0;
-        if (opFlag==0){
-            article.setCommitTime(timestamp);
-            if (saveFlag==0){
-                article.setCreateTime(timestamp);
-                index = articleManagerService.saveArticle(article);
-            }
-            else{
-                index = articleManagerService.updStatus(article.getId(),article.getStatus(),article.getVersion());
-            }
+        article.setStatus(article.getLevel()+1);
+        if (article.getId()==null && article.getId()==0){
+            article.setCreateTime(timestamp);
+            index = articleManagerService.saveArticle(article);
         }
         else{
-            article.setCommitTime(timestamp);
-            if (saveFlag==0){
-                article.setCreateTime(timestamp);
+            int status = articleManagerService.selStatus(article.getId(),article.getVersion());
+            if (status==0){
+                index = articleManagerService.updStatus(article.getId(),article.getStatus(),article.getVersion());
+            }
+            else{
                 article.setVersion(article.getVersion()+1);
                 index = articleManagerService.insArticle(article);
-            }
-            else {
-                index = articleManagerService.updStatus(article.getId(),article.getStatus(),article.getVersion());
             }
         }
         if (index<=0){
@@ -133,9 +111,7 @@ public class ArticleManagerController {
     @ApiOperation(value = "文章详情查询",notes = "根据id查询文章详情")
     @ApiImplicitParam(name="id",value = "文章id",required = true,dataType = "Long",paramType = "path")
     @GetMapping(value = "/articles/{id}")
-    public ResponseBean<Article> getArticle(@PathVariable Long id, HttpServletResponse response){
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+    public ResponseBean<Article> getArticle(@PathVariable Long id){
         Article article = articleManagerService.selById(id);
         if (article==null){
             return new ResponseBean<Article>(404,"Not Found",null);
@@ -145,7 +121,6 @@ public class ArticleManagerController {
 
     @ApiOperation(value = "文章列表分页查询",notes="根据作者id,作者id不用显示传，和文章状态查询")
     @ApiImplicitParams(value = {
-            //@ApiImplicitParam(name="authorId",value="作者ID",required = true,dataType = "Long"),
             @ApiImplicitParam(name="status",value="文章状态",required = true,dataType = "Integer"),
             @ApiImplicitParam(name="pageNum",value="当前页号从1开始，默认1",required = true,dataType = "Integer"),
             @ApiImplicitParam(name="pageSize",value="一页显示条数，默认10",required = true,dataType = "Integer"),
