@@ -21,10 +21,10 @@ public interface ArticleManagerMapper {
             @Result(property = "publishTime",column = "publish_time")
     })
     @Select("select * from article where id=#{0} and version=#{1}")
-    Article selById(Long id);
+    Article selById(Long id,Integer version);
 
     @Delete("delete from article where id=#{0} and version=#{1}")
-    int delById(Long id);
+    int delById(Long id,Integer version);
 
     @Results(value = {
             @Result(id = true,property = "id",column = "id"),
@@ -38,21 +38,21 @@ public interface ArticleManagerMapper {
     int selCount(Long authorId, Integer status);
 
     @Insert("insert into article(id,version,title,author,body,abstract,keywords,entities,pictures,level,source," +
-            "category,subcategory,is_original,create_time,commit_time) VALUES(default,0,#{title},#{authorId},#{body}," +
+            "category,subcategory,is_original,create_time,commit_time,status) VALUES(default,0,#{title},#{authorId},#{body}," +
             "#{descriptions},#{keywords},#{entities},#{pictures},#{level},#{source},#{category}," +
-            "#{subcategory},#{isOriginal},#{createTime},#{commitTime})")
+            "#{subcategory},#{isOriginal},#{createTime},#{commitTime},#{status})")
     int saveArticle(Article article);
 
     @Insert("insert into article(id,version,title,author,body,abstract,keywords,entities,pictures,level,source," +
-            "category,subcategory,is_original,create_time) VALUES(#{id},#{version},#{title},#{authorId},#{body}," +
+            "category,subcategory,is_original,create_time,commit_time,status) VALUES(#{id},#{version},#{title},#{authorId},#{body}," +
             "#{descriptions},#{keywords},#{entities},#{pictures},#{level},#{source},#{category}," +
-            "#{subcategory},#{isOriginal},#{createTime},#{commitTime})")
+            "#{subcategory},#{isOriginal},#{createTime},#{commitTime},#{status})")
     int insArticle(Article article);
 
     @UpdateProvider(type = ArticleDynamicSqlProvider.class,method = "update")
     int updateArticle(Article article);
 
-    @Select("select author from article where id=#{0}")
+    @Select("select author from article where id=#{0} limit 1")
     Long selUserIdByCountId(Long id);
 
     @Update("update article set status=#{1} where id=#{0} and version=#{3}")

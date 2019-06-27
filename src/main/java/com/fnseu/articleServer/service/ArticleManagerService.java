@@ -12,8 +12,8 @@ import java.util.List;
  */
 
 public interface ArticleManagerService {
-    Article selById(Long id);
-    int delById(Long id);
+    Article selById(Long id,Integer version);
+    int delById(Long id,Integer version);
     int saveArticle(Article article);
     int updateArticle(Article article);
     PageInfo selArticleList(Long articleId,Integer status,Integer pageNum,Integer pageSize);

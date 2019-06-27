@@ -22,13 +22,13 @@ public class ArticleManagerServiceImpl implements ArticleManagerService {
     private ArticleManagerMapper articleManagerMapper;
 
     @Override
-    public Article selById(Long id) {
-        return articleManagerMapper.selById(id);
+    public Article selById(Long id,Integer version) {
+        return articleManagerMapper.selById(id,version);
     }
 
     @Override
-    public int delById(Long id){
-        return  articleManagerMapper.delById(id);
+    public int delById(Long id,Integer version){
+        return  articleManagerMapper.delById(id,version);
 
     }
 

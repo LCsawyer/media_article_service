@@ -85,7 +85,7 @@ public class ArticleManagerController {
         article.setCommitTime(timestamp);
         int index = 0;
         article.setStatus(article.getLevel()+1);
-        if (article.getId()==null && article.getId()==0){
+        if (article.getId()==null || article.getId()==0){
             article.setCreateTime(timestamp);
             index = articleManagerService.saveArticle(article);
         }
@@ -109,10 +109,13 @@ public class ArticleManagerController {
 
 
     @ApiOperation(value = "文章详情查询",notes = "根据id查询文章详情")
-    @ApiImplicitParam(name="id",value = "文章id",required = true,dataType = "Long",paramType = "path")
-    @GetMapping(value = "/articles/{id}")
-    public ResponseBean<Article> getArticle(@PathVariable Long id){
-        Article article = articleManagerService.selById(id);
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(name="id",value = "文章id",required = true,dataType = "Long",paramType = "path"),
+            @ApiImplicitParam(name="version",value = "文章版本",required = true,dataType = "Integer",paramType = "path")
+    })
+    @GetMapping(value = "/articles/{id}/{version}")
+    public ResponseBean<Article> getArticle(@PathVariable Long id,@PathVariable Integer version){
+        Article article = articleManagerService.selById(id,version);
         if (article==null){
             return new ResponseBean<Article>(404,"Not Found",null);
         }
@@ -143,10 +146,15 @@ public class ArticleManagerController {
     }
 
     @ApiOperation(value = "文章删除",notes = "用户根据id删除文章")
-    @ApiImplicitParam(name="id",value = "文章id",required = true,dataType = "Long",paramType = "path")
-    @DeleteMapping("/articles/{id}")
-    public ResponseBean deleteUser(@PathVariable Long id){
-        int index = articleManagerService.delById(id);
+    @ApiImplicitParams(
+            value = {
+                    @ApiImplicitParam(name="id",value = "文章id",required = true,dataType = "Long",paramType = "path"),
+                    @ApiImplicitParam(name="version",value = "文章版本",required = true,dataType = "Integer",paramType = "path"),
+            }
+    )
+    @DeleteMapping("/articles/{id}/{version}")
+    public ResponseBean deleteUser(@PathVariable Long id,@PathVariable Integer version){
+        int index = articleManagerService.delById(id,version);
         if (index>0){
             return new ResponseBean(201,"delete",null);
         }
