@@ -3,6 +3,7 @@ package com.fnseu.articleServer.controller;
 import com.fnseu.articleServer.pojo.*;
 import com.fnseu.articleServer.service.ArticleManagerService;
 import com.fnseu.articleServer.service.ArticleReviewService;
+import com.fnseu.articleServer.util.CodeData;
 import com.fnseu.articleServer.util.RabbitMQSender;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -44,9 +45,9 @@ public class ArticleReviewController {
                                                     @RequestParam(defaultValue = "1")Integer pageNum){
         PageInfo pageInfo = articleReviewService.selArticleReviews(status,pageNum,pageSize);
         if (pageInfo==null){
-            return new ResponseBean<PageInfo>(401,"Not Found",null);
+            return new ResponseBean<PageInfo>(CodeData.NODATA,true,"无数据",null);
         }
-        return new ResponseBean<PageInfo>(200,"ok",pageInfo);
+        return new ResponseBean<PageInfo>(CodeData.SUCCESS,true,"查询成功",pageInfo);
     }
 
 
@@ -61,9 +62,9 @@ public class ArticleReviewController {
         articleReviewService.insReview(articleReview);
         int index = articleReviewService.updStatus(articleReview.getResult(),articleReview.getContentId());
         if(index<=0){
-            return new ResponseBean(404,"Not Found",null);
+            return new ResponseBean(CodeData.FEAILED,false,"插入失败",null);
         }
         rabbitMQSender.senderArticleReviewInfo(articleReview);
-        return new ResponseBean(201,"Created",null);
+        return new ResponseBean(CodeData.SUCCESS,true,"成功",null);
     }
 }
