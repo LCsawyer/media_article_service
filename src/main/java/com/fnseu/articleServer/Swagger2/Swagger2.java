@@ -24,6 +24,7 @@ public class Swagger2 {
     }
 
     private ApiInfo apiInfo(){
-        return new ApiInfoBuilder().title("内容服务").description("用户审核、文章审核、文章内容curd url前缀为：http://223.3.65.243:9095/article").termsOfServiceUrl("http://223.3.65.243/article-server").version("1.0").build();
+        return new ApiInfoBuilder().title("内容服务").description("用户审核、文章审核、文章内容curd url前缀为：http://223.3.65.243:9095/article," +
+                "例如查询编号为2version为0的文章的接口为http://223.3.65.243:9095/article/articles/2/0").termsOfServiceUrl("http://223.3.65.243/article-server").version("1.0").build();
     }
 }
