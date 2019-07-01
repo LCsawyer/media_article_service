@@ -6,13 +6,23 @@ package com.fnseu.articleServer.pojo;
  */
 public class ResponseBean<T> {
     private int httpCode;
+    private boolean isSuccess;
     private String msg;
     private T data;
 
-    public ResponseBean(int httpCode, String msg, T data) {
+    public boolean isSuccess() {
+        return isSuccess;
+    }
+
+    public void setSuccess(boolean success) {
+        isSuccess = success;
+    }
+
+    public ResponseBean(int httpCode, boolean isSuccess,String msg, T data) {
         this.httpCode = httpCode;
         this.msg = msg;
         this.data = data;
+        this.isSuccess = isSuccess;
     }
 
     public int getHttpCode() {

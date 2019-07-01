@@ -2,6 +2,7 @@ package com.fnseu.articleServer.controller;
 
 import com.fnseu.articleServer.pojo.*;
 import com.fnseu.articleServer.service.UserService;
+import com.fnseu.articleServer.util.CodeData;
 import com.fnseu.articleServer.util.RabbitMQSender;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -48,26 +49,26 @@ public class UserController {
             Integer pageSize, @RequestParam Integer pageNum, HttpServletRequest request){
         String userIdStr = request.getHeader("userId");
         if (userIdStr==null){
-            return new ResponseBean<>(404,"No user",null);
+            return new ResponseBean(CodeData.ACCOUNT_ERROR,false,"账户不存在或被禁用",null);
         }
         Long reviewer_id = Long.parseLong(userIdStr);
         PageInfo pageInfo = userService.selAuthticationList(reviewer_id,STATUS,pageNum,pageSize);//offset值
         if (pageInfo==null){
-            return new ResponseBean<PageInfo>(404,"Not Found",null);
+            return new ResponseBean<PageInfo>(CodeData.NODATA,true,"无数据",null);
         }
-        return new ResponseBean<PageInfo>(200,"ok",pageInfo);
+        return new ResponseBean<PageInfo>(CodeData.SUCCESS,true,"查询成功",pageInfo);
     }
 
 
     @ApiOperation(value="认证文件查询",notes="查询用户上传的认证文件")
     @ApiImplicitParam(name="id",value="认证文件id",required = true,dataType = "Long",paramType = "path")
-    @GetMapping("/userReviews/identity/{id}")
+    @GetMapping("/userIdentities/{id}")
     public ResponseBean<Authentication> selectAuthFileById(@PathVariable Long id){
         Authentication authentication = userService.selectAuthFileById(id);
         if (authentication==null){
-            return new ResponseBean<Authentication>(404,"Not Found",null);
+            return new ResponseBean<Authentication>(CodeData.NODATA,true,"无数据",null);
         }
-        return new ResponseBean<Authentication>(200,"ok",authentication);
+        return new ResponseBean<Authentication>(CodeData.SUCCESS,true,"查询成功",authentication);
     }
 
     @ApiOperation(value = "身份审核反馈",notes="向用户反馈审核结果，反馈信息存入消息队列")
@@ -78,6 +79,6 @@ public class UserController {
         authentication.setReviewTime(timestamp);
         userService.updAuthReview(authentication);
         rabbitMQSender.senderUserReviewInfo(authentication);
-        return new ResponseBean(200,"ok",null);
+        return new ResponseBean(CodeData.SUCCESS,true,"成功",null);
     }
 }
